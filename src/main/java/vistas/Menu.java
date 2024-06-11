@@ -8,6 +8,10 @@ import entidades.Cliente;
 import java.sql.SQLException;
 import java.util.Scanner;
 import modelos.ClienteModelo;
+import modelos.EmpleadoModelo;
+import modelos.FacturaModelo;
+import modelos.ProveedorModelo;
+import modelos.TarjetaDeCreditoModelo;
 
 /**
  *
@@ -15,10 +19,13 @@ import modelos.ClienteModelo;
  */
 public class Menu {
     final String SEPARADOR = "---------------------------------------------------------";
-    Cliente cliente;
     static Scanner sc = new Scanner(System.in);
     public void menu(){
         ClienteModelo clienteModelo = new ClienteModelo();
+        EmpleadoModelo empleadoModelo = new EmpleadoModelo();
+        ProveedorModelo proveedorModelo = new ProveedorModelo();
+        FacturaModelo facturaModelo = new FacturaModelo();
+        TarjetaDeCreditoModelo tarjetaModelo = new TarjetaDeCreditoModelo();
         boolean salida = false;
         while (!salida) {
             System.out.println(SEPARADOR);
@@ -72,12 +79,17 @@ public class Menu {
                     clienteModelo.eliminarCliente();
                     break;
                 case 5:
+                    empleadoModelo.crearEmpleado();
                     break;
                 case 6:
+                    empleadoModelo.mostrarTodosEmpleados();
+                    empleadoModelo.editarEmpleado();
                     break;
                 case 7:
+                    empleadoModelo.mostrarTodosEmpleados();
                     break;
                 case 8:
+                    empleadoModelo.eliminarEmpleado();
                     break;
                 case 9:
                     salida = true;

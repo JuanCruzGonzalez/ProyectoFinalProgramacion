@@ -8,8 +8,7 @@ import entidades.Cliente;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
 import persistencia.ClienteJpaController;
 import persistencia.exceptions.NonexistentEntityException;
 
@@ -33,7 +32,12 @@ public class ClienteModelo {
         int cuitCliente = sc.nextInt();
         sc.nextLine(); // Limpiar el búfer de entrada
         cliente = new Cliente(dniCliente, nombreCliente, apellidoCliente, cuitCliente);
-        clienteJpa.create(cliente);
+        try{
+           clienteJpa.create(cliente);
+            System.out.println("Cliente creado existosamente");
+        }catch(PersistenceException e){
+            System.out.println("Error al crear el cliente");
+        }
     }
 
     public void eliminarCliente() {
@@ -41,8 +45,9 @@ public class ClienteModelo {
             System.out.println("Ingrese el dni");
             int dniCliente = sc.nextInt();
             clienteJpa.destroy(dniCliente);
+            System.out.println("Cliente eliminado existosamente");
         }catch (NonexistentEntityException ex){
-            Logger.getLogger(ClienteModelo.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error al eliminar el cliente");
         }
     }
 
@@ -78,13 +83,19 @@ public class ClienteModelo {
                     clienteJpa.edit(cliente);                           
                     break;
             }
+            System.out.println("Cliente editado existosamente");
         } catch (Exception ex) {
-            Logger.getLogger(ClienteModelo.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error al editar el cliente");
         }
     }
 
     public Cliente traerCliente(int id) {
-        return clienteJpa.findCliente(id);
+        try{
+            return clienteJpa.findCliente(id);
+        }catch(Exception e){
+            System.out.println("Error al buscar el cliente");
+            return null;
+        }
     }
     
     public void mostrarTodosClientes(){
@@ -95,7 +106,7 @@ public class ClienteModelo {
     
     public ArrayList<Cliente> traerListaClientes(){
         List<Cliente> clientes = clienteJpa.findClienteEntities();
-        ArrayList<Cliente> arrayClientes = new ArrayList<Cliente>(clientes);
+        ArrayList<Cliente> arrayClientes = new ArrayList<>(clientes);
         return arrayClientes;
     }
 }

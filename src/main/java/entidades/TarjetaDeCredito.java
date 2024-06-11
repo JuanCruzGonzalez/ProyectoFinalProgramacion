@@ -64,7 +64,7 @@ public class TarjetaDeCredito implements Serializable {
 
     @Override
     public String toString() {
-        return "TarjetaDeCredito{" + "id=" + id + ", fechaIngreso=" + fechaIngreso + ", limite=" + limite + '}';
+        return "Tarjeta      "+ "ID= " + id + " \nFecha de Ingreso = " + fechaIngreso + ", Limite = " + limite;
     }
     
 }

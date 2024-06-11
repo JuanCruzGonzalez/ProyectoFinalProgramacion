@@ -10,11 +10,14 @@ entidades\Factura_.class
 modelos\ClienteModelo.class
 modelos\TarjetaDeCreditoModelo.class
 entidades\Empleado_.class
+vistas\MenuEmpleado.class
 vistas\Menu.class
 persistencia\exceptions\PreexistingEntityException.class
 persistencia\exceptions\IllegalOrphanException.class
+vistas\MenuCliente.class
 entidades\Empleado.class
 entidades\Factura.class
+vistas\MenuFactura.class
 entidades\Cliente_.class
 persistencia\EmpleadoJpaController.class
 persistencia\ProveedorJpaController.class
@@ -23,6 +26,8 @@ persistencia\TarjetaDeCreditoJpaController.class
 entidades\Proveedor_.class
 entidades\Persona.class
 entidades\Cliente.class
+vistas\MenuTarjeta.class
 entidades\Proveedor.class
 persistencia\exceptions\NonexistentEntityException.class
 modelos\EmpleadoModelo.class
+vistas\MenuProveedor.class

@@ -38,9 +38,6 @@ public class ClienteJpaController implements Serializable {
     }
 
     public void create(Cliente cliente) {
-        if (cliente.getTarjetasDeCredito() == null) {
-            cliente.setTarjetasDeCredito(new ArrayList<TarjetaDeCredito>());
-        }
         if (cliente.getFacturas() == null) {
             cliente.setFacturas(new ArrayList<Factura>());
         }
@@ -48,23 +45,16 @@ public class ClienteJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            ArrayList<TarjetaDeCredito> attachedTarjetasDeCredito = new ArrayList<TarjetaDeCredito>();
-            for (TarjetaDeCredito tarjetasDeCreditoTarjetaDeCreditoToAttach : cliente.getTarjetasDeCredito()) {
-                tarjetasDeCreditoTarjetaDeCreditoToAttach = em.getReference(tarjetasDeCreditoTarjetaDeCreditoToAttach.getClass(), tarjetasDeCreditoTarjetaDeCreditoToAttach.getId());
-                attachedTarjetasDeCredito.add(tarjetasDeCreditoTarjetaDeCreditoToAttach);
-            }
-            cliente.setTarjetasDeCredito(attachedTarjetasDeCredito);
+
             ArrayList<Factura> attachedFacturas = new ArrayList<Factura>();
             for (Factura facturasFacturaToAttach : cliente.getFacturas()) {
                 facturasFacturaToAttach = em.getReference(facturasFacturaToAttach.getClass(), facturasFacturaToAttach.getNroFactura());
                 attachedFacturas.add(facturasFacturaToAttach);
             }
             cliente.setFacturas(attachedFacturas);
+
             em.persist(cliente);
-            for (TarjetaDeCredito tarjetasDeCreditoTarjetaDeCredito : cliente.getTarjetasDeCredito()) {
-                tarjetasDeCreditoTarjetaDeCredito.getClientes().add(cliente);
-                tarjetasDeCreditoTarjetaDeCredito = em.merge(tarjetasDeCreditoTarjetaDeCredito);
-            }
+
             for (Factura facturasFactura : cliente.getFacturas()) {
                 Cliente oldClieOfFacturasFactura = facturasFactura.getClie();
                 facturasFactura.setClie(cliente);
@@ -81,6 +71,38 @@ public class ClienteJpaController implements Serializable {
             }
         }
     }
+    
+    public void addTarjetaToCliente(int clienteId, TarjetaDeCredito tarjeta) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+
+            Cliente cliente = em.find(Cliente.class, clienteId);
+            if (cliente == null) {
+                throw new IllegalArgumentException("Cliente no encontrado");
+            }
+
+            if (cliente.getTarjetasDeCredito() == null) {
+                cliente.setTarjetasDeCredito(new ArrayList<TarjetaDeCredito>());
+            }
+
+            TarjetaDeCredito tarjetaAttached = em.getReference(TarjetaDeCredito.class, tarjeta.getId());
+            cliente.getTarjetasDeCredito().add(tarjetaAttached);
+            tarjetaAttached.getClientes().add(cliente);
+
+            em.merge(cliente);
+            em.merge(tarjetaAttached);
+
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+
 
     public void edit(Cliente cliente) throws NonexistentEntityException, Exception {
         EntityManager em = null;

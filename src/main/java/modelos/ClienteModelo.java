@@ -5,11 +5,13 @@
 package modelos;
 
 import entidades.Cliente;
+import entidades.TarjetaDeCredito;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import javax.persistence.PersistenceException;
 import persistencia.ClienteJpaController;
+import persistencia.TarjetaDeCreditoJpaController;
 import persistencia.exceptions.NonexistentEntityException;
 
 /**
@@ -18,6 +20,7 @@ import persistencia.exceptions.NonexistentEntityException;
  */
 public class ClienteModelo {
     ClienteJpaController clienteJpa = new ClienteJpaController();
+    TarjetaDeCreditoJpaController tarjetaJpa = new TarjetaDeCreditoJpaController();
     Cliente cliente;
     static Scanner sc = new Scanner(System.in);
     public void crearCliente() {
@@ -37,6 +40,27 @@ public class ClienteModelo {
             System.out.println("Cliente creado existosamente");
         }catch(PersistenceException e){
             System.out.println("Error al crear el cliente");
+        }
+    }
+    
+    public void agregarTarjetaCliente(){
+        System.out.println("Ingrese el id del cliente");
+        int idCliente = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Ingrese el id de la tarjeta");
+        int idTarjeta = sc.nextInt();
+        sc.nextLine();
+        TarjetaDeCredito tarjeta = tarjetaJpa.findTarjetaDeCredito(idTarjeta);
+        clienteJpa.addTarjetaToCliente(idCliente, tarjeta);
+    }
+    
+    public void mostrarTarjetasDeCreditoCliente(){
+        System.out.println("Ingrese el id del cliente");
+        int idCliente = sc.nextInt();
+        sc.nextLine();
+        cliente = clienteJpa.findCliente(idCliente);
+        for(TarjetaDeCredito tarjetaCliente : cliente.getTarjetasDeCredito()){
+            System.out.println(tarjetaCliente.toString());
         }
     }
 
